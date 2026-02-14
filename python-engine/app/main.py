@@ -67,6 +67,12 @@ app.add_middleware(
 )
 
 
+@app.get("/")
+def health():
+    """Root health check for Render."""
+    return {"status": "ok", "service": "Sentiment Oracle API"}
+
+
 @app.get("/oracle")
 def run_pipeline():
     """
