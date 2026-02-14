@@ -35,12 +35,15 @@ _last_sentiment_response: dict | None = None
 _last_oracle_response: dict | None = None
 
 
-# ── Lifespan: pre-load model at startup ─────────────────────
+# ── Lifespan: start model load in background ────────────────
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info("Loading NLP model (one-time startup)...")
-    get_model()
-    logger.info("Model loaded ✓ — Oracle is ready.")
+    import threading
+    def _load():
+        logger.info("Loading NLP model in background...")
+        get_model()
+        logger.info("Model loaded ✓ — Oracle is ready.")
+    threading.Thread(target=_load, daemon=True).start()
     yield
 
 
