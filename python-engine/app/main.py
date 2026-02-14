@@ -60,7 +60,7 @@ import os
 _frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[_frontend_url, "http://localhost:5173", "http://localhost:3000"],
+    allow_origins=[_frontend_url, "https://the-sentiment-oracle.vercel.app", "http://localhost:5173", "http://localhost:5174", "http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

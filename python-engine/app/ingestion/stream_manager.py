@@ -30,16 +30,13 @@ class StreamManager:
         self,
         source_name: str,
         fetch_fn: Callable[[], list[dict]],
-    ) -> list[dict]:
+    ) -> tuple[list[dict], bool]:
         """
         Execute fetch_fn if cooldown has elapsed, otherwise return cached results.
 
-        Args:
-            source_name: Unique identifier (e.g. "reddit", "twitter")
-            fetch_fn:    Zero-argument callable returning list[dict]
-
         Returns:
-            List of post dicts (fresh or cached).
+            Tuple of (posts, is_fresh). is_fresh=True means new data that
+            should go through dedup; False means cached data, skip dedup.
         """
         now = time.monotonic()
         last_time = self._last_fetch_time.get(source_name, 0.0)
@@ -54,7 +51,7 @@ class StreamManager:
                     f"StreamManager: fresh fetch for '{source_name}' "
                     f"({len(results)} posts)"
                 )
-                return results
+                return results, True
             except Exception as e:
                 logger.warning(
                     f"StreamManager: fetch failed for '{source_name}': {e}"
@@ -67,7 +64,8 @@ class StreamManager:
                 f"({remaining:.1f}s remaining), using cache"
             )
 
-        return self._cache.get(source_name, [])
+        cached = self._cache.get(source_name, [])
+        return cached, False
 
 
 # ── Global singleton ────────────────────────────────────────
@@ -77,7 +75,7 @@ _stream_manager = StreamManager()
 def managed_fetch(
     source_name: str,
     fetch_fn: Callable[[], list[dict]],
-) -> list[dict]:
+) -> tuple[list[dict], bool]:
     """Fetch from a named source with rate limiting and caching."""
     return _stream_manager.fetch(source_name, fetch_fn)
 
