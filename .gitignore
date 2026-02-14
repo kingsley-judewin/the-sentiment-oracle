@@ -1,0 +1,49 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Python
+__pycache__/
+**/__pycache__/
+*.pyc
+*.egg-info/
+venv/
+.venv/
+
+# Environment (secrets)
+.env
+
+# Build outputs
+dist/
+cache/
+artifacts/
+
+# Large data files (Sentiment140 ~228MB)
+*.csv
+
+# HuggingFace model cache
+python-engine/models/
+*.safetensors
+*.bin
+
+# IDE & editor
+.claude/
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Hardhat
+cache/
+artifacts/
+
+# Logs
+*.log
+
+# Pytest
+.pytest_cache/
+**/.pytest_cache/
